@@ -72,7 +72,7 @@ public class Main extends Application {
             }
         }
         if (madAnts.size() > 1) {
-            ant.antColor = Color.RED;
+            ant.antColor = Color.GREEN;
         } else {
             ant.antColor = Color.BLACK;
         }
