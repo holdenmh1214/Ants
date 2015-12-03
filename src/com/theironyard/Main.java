@@ -36,9 +36,47 @@ public class Main extends Application {
     void drawAnts(GraphicsContext context){
         context.clearRect(0,0, WIDTH, HEIGHT);
         for (Ant ant :ants){
-            context.setFill(Color.BLACK);
+            /*if (aggravateAnts(ant)) {
+                context.setFill(Color.RED);
+            } else {
+                context.setFill(Color.BLACK);
+            }*/
+            context.setFill(ant.antColor);
             context.fillOval(ant.x, ant.y, 5, 5);
+
         }
+
+    }
+/*
+    boolean aggravateAnts(Ant ant) {
+        for (Ant ant1 : ants) {
+            if (ant1 != ant) {
+                double distance = Math.sqrt(Math.pow((ant1.x - ant.x), 2) + Math.pow((ant1.y - ant.y), 2));
+                if (distance <= Math.abs(10)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    */
+
+    //another method
+
+    Ant aggravateAnts(Ant ant) {
+        ArrayList<Ant> madAnts = new ArrayList<>();
+
+        for (Ant ant1 : ants) {
+            if (Math.abs(ant.x - ant1.x) <= 10 && Math.abs(ant.y - ant1.y) <= 10) {
+                madAnts.add(ant);
+            }
+        }
+        if (madAnts.size() > 1) {
+            ant.antColor = Color.RED;
+        } else {
+            ant.antColor = Color.BLACK;
+        }
+        return ant;
     }
 
     double randomStep(){
@@ -58,8 +96,9 @@ public class Main extends Application {
 
     void updateAnts(){
         ants = ants.parallelStream()
-                .map(this :: moveAnt)
-                .collect(Collectors.toCollection(ArrayList<Ant> :: new));
+                .map(this::moveAnt)
+                .map(this::aggravateAnts)
+                .collect(Collectors.toCollection(ArrayList<Ant>::new));
     }
 
     int fps(long now){
